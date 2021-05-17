@@ -6,25 +6,25 @@
 #property copyright "Copyright 2021, MetaQuotes Ltd."
 #property link      "https://www.mql5.com"
 #property version   "1.00"
-#include "JSONObject.mqh"
+#include "JSON.mqh"
 class JSONStack
   {
 private:
-   JSONObject*        stack[];
-   
+   JSON*             stackArray[];
+
 public:
                      JSONStack();
                     ~JSONStack();
-   void              push(JSONObject *item);
+   void              push(JSON *item);
    int               stackpoint;
-   JSONObject*       pop();
+   JSON*             pop();
   };
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 JSONStack::JSONStack()
   {
-   ArrayResize(stack,5);
+   ArrayResize(stackArray,5);
    stackpoint = -1;
   }
 //+------------------------------------------------------------------+
@@ -32,25 +32,31 @@ JSONStack::JSONStack()
 //+------------------------------------------------------------------+
 JSONStack::~JSONStack()
   {
+   ArrayFree(stackArray);
   }
 //+------------------------------------------------------------------+
 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-void JSONStack::push(JSONObject *item)
+void JSONStack::push(JSON *item)
   {
-   if(stackpoint +1 == ArraySize(stack))
+   if(stackpoint +1 == ArraySize(stackArray))
      {
-      ArrayResize(stack,ArraySize(stack) + 5);
+      ArrayResize(stackArray,ArraySize(stackArray) + 5);
      }
-     stack[++stackpoint] = item;
+   stackArray[++stackpoint] = item;
   }
 //+------------------------------------------------------------------+
 
 
-JSONObject* JSONStack::pop(void){
-   JSONObject *item = stack[stackpoint];
-   ArrayRemove(stack,stackpoint--);
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+JSON* JSONStack::pop(void)
+  {
+   JSON *item = stackArray[stackpoint];
+   ArrayRemove(stackArray,stackpoint--);
    return item;
-}
+  }
+//+------------------------------------------------------------------+
